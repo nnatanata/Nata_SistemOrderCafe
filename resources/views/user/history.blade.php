@@ -20,9 +20,7 @@
             justify-content: center;
         }
 
-        .brand-text {
-            font-weight: bold;
-        }
+        .brand-text { font-weight: bold; }
 
         .nav-sidebar .nav-link { color: #c7d2fe !important; }
 
@@ -38,10 +36,7 @@
 
         .content-wrapper { background-color: #f8fafc; }
 
-        .sidebar-mini.sidebar-collapse .brand-text {
-            display: none;
-        }
-
+        .sidebar-mini.sidebar-collapse .brand-text,
         .sidebar-mini.sidebar-collapse .nav-sidebar .nav-link p {
             display: none;
         }
@@ -128,47 +123,47 @@
             Riwayat Pesanan
         </h4>
 
-        @forelse($orders as $orderDate => $batch)
-        <div class="history-card mb-4 shadow-sm">
+        @forelse($orders as $batchCode => $batch)
+            <div class="history-card mb-4 shadow-sm">
 
-            <div class="history-header">
-                Tanggal Pesanan:
-                {{ \Carbon\Carbon::parse($orderDate)->format('d M Y H:i') }}
-            </div>
+                <div class="history-header">
+                    Tanggal Pesanan:
+                    {{ \Carbon\Carbon::parse($batch->first()->order_date)->format('d M Y H:i') }}
+                </div>
 
-            <div class="p-3">
-                <table class="table table-bordered history-table mb-0">
-                    <tr>
-                        <th>Menu</th>
-                        <th>Jumlah</th>
-                        <th>Total</th>
-                    </tr>
-
-                    @php $grandTotal = 0; @endphp
-                    @foreach($batch as $order)
-                        @php $grandTotal += $order->total_price; @endphp
+                <div class="p-3">
+                    <table class="table table-bordered history-table mb-0">
                         <tr>
-                            <td>{{ $order->menu->name }}</td>
-                            <td class="text-center">{{ $order->quantity }}</td>
-                            <td class="text-right">
-                                Rp {{ number_format($order->total_price,0,',','.') }}
+                            <th>Menu</th>
+                            <th>Jumlah</th>
+                            <th>Total</th>
+                        </tr>
+
+                        @php $grandTotal = 0; @endphp
+                        @foreach($batch as $order)
+                            @php $grandTotal += $order->total_price; @endphp
+                            <tr>
+                                <td>{{ $order->menu->name }}</td>
+                                <td class="text-center">{{ $order->quantity }}</td>
+                                <td class="text-right">
+                                    Rp {{ number_format($order->total_price,0,',','.') }}
+                                </td>
+                            </tr>
+                        @endforeach
+
+                        <tr>
+                            <td colspan="2" class="text-right font-weight-bold">
+                                Total Pembelian
+                            </td>
+                            <td class="text-right font-weight-bold text-primary">
+                                Rp {{ number_format($grandTotal,0,',','.') }}
                             </td>
                         </tr>
-                    @endforeach
-
-                    <tr>
-                        <td colspan="2" class="text-right font-weight-bold">
-                            Total Pembelian
-                        </td>
-                        <td class="text-right font-weight-bold text-primary">
-                            Rp {{ number_format($grandTotal,0,',','.') }}
-                        </td>
-                    </tr>
-                </table>
+                    </table>
+                </div>
             </div>
-        </div>
 
-        <div class="history-divider"></div>
+            <div class="history-divider"></div>
         @empty
             <div class="alert alert-info">
                 Belum ada riwayat pesanan.

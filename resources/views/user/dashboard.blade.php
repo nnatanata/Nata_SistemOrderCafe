@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
     <style>
-        .main-sidebar {
-            background-color: #0d1b3d !important;
-        }
+        .main-sidebar { background-color: #0d1b3d !important; }
 
         .brand-link {
             background-color: #0b1633 !important;
@@ -19,22 +17,16 @@
             border-bottom: 1px solid #1e3a8a;
         }
 
-        .brand-text {
-            font-weight: bold;
-        }
+        .brand-text { font-weight: bold; }
 
-        .nav-sidebar .nav-link {
-            color: #c7d2fe !important;
-        }
+        .nav-sidebar .nav-link { color: #c7d2fe !important; }
 
         .nav-sidebar .nav-link.active {
             background-color: #1e3a8a !important;
             color: #ffffff !important;
         }
 
-        .nav-icon {
-            margin-right: 10px;
-        }
+        .nav-icon { margin-right: 10px; }
 
         .main-header {
             background-color: #0b1633 !important;
@@ -44,30 +36,20 @@
             z-index: 1030;
         }
 
-        .navbar .nav-link {
-            color: #ffffff !important;
-        }
+        .navbar .nav-link { color: #ffffff !important; }
 
-        .content-wrapper {
-            background-color: #f8fafc;
-        }
+        .content-wrapper { background-color: #f8fafc; }
 
-        .card {
-            border-radius: 10px;
-        }
+        .card { border-radius: 10px; }
 
         .btn-success {
             background-color: #0d3b66;
             border: none;
         }
 
-        .btn-success:hover {
-            background-color: #092a4a;
-        }
+        .btn-success:hover { background-color: #092a4a; }
 
-        .sidebar-mini.sidebar-collapse .brand-text {
-            display: none;
-        }
+        .sidebar-mini.sidebar-collapse .brand-text { display: none; }
     </style>
 </head>
 
@@ -175,7 +157,7 @@
         return angka.toLocaleString('id-ID');
     }
 
-    $('.quantity').on('input', function () {
+    function hitungTotal() {
         let total = 0;
 
         $('.quantity').each(function () {
@@ -185,6 +167,23 @@
         });
 
         $('#total').text(formatRupiah(total));
+    }
+
+    $('.quantity').on('focus', function () {
+        if ($(this).val() === '0') {
+            $(this).val('');
+        }
+    });
+
+    $('.quantity').on('blur', function () {
+        if ($(this).val() === '' || parseInt($(this).val()) < 0) {
+            $(this).val(0);
+        }
+        hitungTotal();
+    });
+
+    $('.quantity').on('input', function () {
+        hitungTotal();
     });
 </script>
 

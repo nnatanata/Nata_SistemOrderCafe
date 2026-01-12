@@ -125,7 +125,7 @@
         @forelse ($groupedOrders as $batchCode => $batch)
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
-                    {{-- <strong>Kode Transaksi:</strong> {{ $batchCode }} <br> --}}
+                    
                     <small>
                         Pemesan: {{ $batch->first()->user->name }} |
                         {{ \Carbon\Carbon::parse($batch->first()->order_date)->format('d M Y H:i') }}
