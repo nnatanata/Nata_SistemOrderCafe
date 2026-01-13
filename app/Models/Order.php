@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
+    use HasFactory;
+
+    protected $table = 'orders';
+
     protected $fillable = [
         'user_id',
         'menu_id',
@@ -13,6 +18,7 @@ class Order extends Model
         'total_price',
         'order_date',
         'order_batch',
+        'status',
     ];
 
     protected $casts = [

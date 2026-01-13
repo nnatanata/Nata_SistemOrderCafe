@@ -11,37 +11,48 @@ Route::get('/', function () {
 });
 
 //auth
-Route::get('/login', [AuthController::class, 'loginForm']);
+Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/register', [AuthController::class, 'registerForm']);
+Route::get('/register', [AuthController::class, 'registerForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::get('/logout', [AuthController::class, 'logout']);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 //admin
 Route::prefix('admin')->group(function () {
 
-    Route::get('/', [AdminController::class, 'orders'])
-        ->name('admin.dashboard');
+    Route::get('/', function () {
+        return redirect()->route('admin.orders.incoming');
+    })->name('admin.dashboard');
 
-    Route::get('/menu', [MenuController::class,'index'])
-        ->name('admin.menu.index');
+    //pesanan masuk
+    Route::get('/orders/incoming', [AdminController::class, 'orders_incoming'])
+        ->name('admin.orders.incoming');
 
-    Route::post('/menu', [MenuController::class,'store'])
-        ->name('admin.menu.store');
-
-    Route::put('/menu/{id}', [MenuController::class,'update'])
-        ->name('admin.menu.update');
-
-    Route::delete('/menu/{id}', [MenuController::class,'destroy'])
-        ->name('admin.menu.destroy');
-
-    Route::patch('/menu/{id}/status', [MenuController::class,'updateStatus'])
-        ->name('admin.menu.status');
-
+    //pesanan selesai
     Route::get('/orders', [AdminController::class, 'orders'])
         ->name('admin.orders');
+
+    //update status
+    Route::patch('/orders/{batch}/status', [AdminController::class, 'updateOrderStatus'])
+        ->name('admin.orders.updateStatus');
+
+    //menu
+    Route::get('/menu', [MenuController::class, 'index'])
+        ->name('admin.menu.index');
+
+    Route::post('/menu', [MenuController::class, 'store'])
+        ->name('admin.menu.store');
+
+    Route::put('/menu/{id}', [MenuController::class, 'update'])
+        ->name('admin.menu.update');
+
+    Route::delete('/menu/{id}', [MenuController::class, 'destroy'])
+        ->name('admin.menu.destroy');
+
+    Route::patch('/menu/{id}/status', [MenuController::class, 'updateStatus'])
+        ->name('admin.menu.status');
 });
 
 //user

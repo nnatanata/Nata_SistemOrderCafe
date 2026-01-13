@@ -11,7 +11,7 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        return redirect('/admin/orders');
+        return redirect()->route('admin.orders');
     }
 
     public function menu()
@@ -28,7 +28,7 @@ class AdminController extends Controller
             'is_available' => 'required|boolean'
         ]);
 
-        Menu::create($request->only('name','price','is_available'));
+        Menu::create($request->only('name', 'price', 'is_available'));
 
         return back()->with('success', 'Menu berhasil ditambahkan');
     }
@@ -42,7 +42,7 @@ class AdminController extends Controller
         ]);
 
         Menu::where('id', $id)->update(
-            $request->only('name','price','is_available')
+            $request->only('name', 'price', 'is_available')
         );
 
         return back()->with('success', 'Menu berhasil diperbarui');
@@ -66,10 +66,36 @@ class AdminController extends Controller
     public function orders()
     {
         $groupedOrders = Order::with(['user', 'menu'])
+            ->where('status', 'Selesai')
             ->orderBy('order_date', 'desc')
             ->get()
             ->groupBy('order_batch');
 
         return view('admin.orders', compact('groupedOrders'));
+    }
+
+    public function orders_incoming()
+    {
+        $groupedOrders = Order::with(['user', 'menu'])
+            ->whereIn('status', ['Baru', 'Diproses'])
+            ->orderBy('order_date', 'desc')
+            ->get()
+            ->groupBy('order_batch');
+
+        return view('admin.orders_incoming', compact('groupedOrders'));
+    }
+
+    public function updateOrderStatus(Request $request, $batch)
+    {
+        $request->validate([
+            'status' => 'required|in:Diproses,Selesai'
+        ]);
+
+        Order::where('order_batch', $batch)
+            ->update([
+                'status' => $request->status
+            ]);
+
+        return back()->with('success', 'Status pesanan berhasil diperbarui');
     }
 }

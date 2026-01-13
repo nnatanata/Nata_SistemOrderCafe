@@ -17,7 +17,7 @@ class UserController extends Controller
         }
 
         $menus = Menu::where('is_available', 1)->get();
-        return view('user.dashboard', compact('menus'));
+        return view('user.pesan', compact('menus'));
     }
 
     public function order(Request $request)
@@ -27,8 +27,8 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'menu_id'   => 'required|array',
-            'quantity'  => 'required|array',
+            'menu_id'  => 'required|array',
+            'quantity' => 'required|array',
         ]);
 
         $menuIds    = $request->menu_id;
@@ -49,6 +49,7 @@ class UserController extends Controller
                     'total_price' => $menu->price * $qty,
                     'order_date'  => now(),
                     'order_batch' => $batchCode,
+                    'status'      => 'Baru',
                 ]);
             }
         }

@@ -92,12 +92,21 @@
                 <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
 
                     <li class="nav-item">
-                        <a href="/admin"
-                           class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-clipboard-list"></i>
+                        <a href="/admin/orders/incoming"
+                        class="nav-link {{ request()->is('admin/orders/incoming') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-inbox"></i>
                             <p>Pesanan Masuk</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="{{ route('admin.orders') }}"
+                        class="nav-link {{ request()->routeIs('admin.orders') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-clipboard-check"></i>
+                            <p>Pesanan Selesai</p>
+                        </a>
+                    </li>
+
 
                     <li class="nav-item">
                         <a href="/admin/menu"
