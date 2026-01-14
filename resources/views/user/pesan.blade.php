@@ -1,4 +1,4 @@
-@extends('user.dashboard')
+@extends('user.layout')
 
 @section('title', 'Dashboard User')
 
@@ -11,7 +11,7 @@
     <div class="row">
         @foreach($menus as $menu)
         <div class="col-md-4">
-            <div class="card shadow-sm p-3 mb-3">
+            <div class="card shadow-sm p-3 mb-3 menu-card">
                 <h5>{{ $menu->name }}</h5>
                 <p class="text-muted">
                     Rp {{ number_format($menu->price,0,',','.') }}

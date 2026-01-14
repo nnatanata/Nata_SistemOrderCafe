@@ -22,9 +22,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 //admin
 Route::prefix('admin')->group(function () {
 
-    Route::get('/', function () {
-        return redirect()->route('admin.orders.incoming');
-    })->name('admin.dashboard');
+    Route::get('/', [AdminController::class, 'dashboard'])
+        ->name('admin.dashboard');
 
     //pesanan masuk
     Route::get('/orders/incoming', [AdminController::class, 'orders_incoming'])
@@ -56,8 +55,11 @@ Route::prefix('admin')->group(function () {
 });
 
 //user
-Route::get('/user', [UserController::class, 'index'])
+Route::get('/user', [UserController::class, 'dashboard'])
     ->name('user.dashboard');
+
+Route::get('/user/pesan', [UserController::class, 'index'])
+    ->name('user.pesan');
 
 Route::post('/user/order', [UserController::class, 'order'])
     ->name('user.order');
@@ -67,3 +69,6 @@ Route::get('/user/success', [UserController::class, 'success'])
 
 Route::get('/user/orders/history', [UserController::class, 'history'])
     ->name('user.orders.history');
+
+Route::get('/user/orders/status/{batch}', [UserController::class, 'orderStatus'])
+    ->name('user.orders.status');

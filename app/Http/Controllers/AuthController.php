@@ -53,7 +53,7 @@ class AuthController extends Controller
                 return redirect('/admin');
             }
 
-            return redirect('/user');
+            return redirect()->route('user.dashboard');
         }
 
         return back()->with('error', 'Email atau password salah!');

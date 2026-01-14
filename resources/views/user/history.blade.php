@@ -1,4 +1,4 @@
-@extends('user.dashboard')
+@extends('user.layout')
 
 @section('title', 'Pesanan Anda')
 
@@ -40,9 +40,23 @@
 @forelse($orders as $batchCode => $batch)
     <div class="history-card mb-4 shadow-sm">
 
-        <div class="history-header">
-            Tanggal Pesanan:
-            {{ \Carbon\Carbon::parse($batch->first()->order_date)->format('d M Y H:i') }}
+        <div class="history-header d-flex justify-content-between align-items-center">
+            <div>
+                Tanggal Pesanan: {{ \Carbon\Carbon::parse($batch->first()->order_date)->format('d M Y H:i') }}
+            </div>
+
+            <div>
+                @php $status = $batch->first()->status; @endphp
+                @php
+                    $statusClass = 'badge-secondary';
+                    if ($status === 'Baru') $statusClass = 'badge-primary';
+                    if ($status === 'Diproses') $statusClass = 'badge-warning';
+                    if ($status === 'Selesai') $statusClass = 'badge-success';
+                @endphp
+
+                <span class="badge {{ $statusClass }} status-badge">{{ strtoupper($status) }}</span>
+                <button class="btn btn-sm btn-link refresh-status" data-batch="{{ $batchCode }}">Refresh</button>
+            </div>
         </div>
 
         <div class="p-3">
@@ -83,5 +97,44 @@
         Belum ada pesanan.
     </div>
 @endforelse
+
+@section('scripts')
+<script>
+    $(function () {
+        function statusClassFor(status) {
+            if (status === 'Baru') return 'badge-primary';
+            if (status === 'Diproses') return 'badge-warning';
+            if (status === 'Selesai') return 'badge-success';
+            return 'badge-secondary';
+        }
+
+        $('.refresh-status').on('click', function (e) {
+            e.preventDefault();
+            const batch = $(this).data('batch');
+            const $btn = $(this);
+            $btn.prop('disabled', true).text('Refreshing...');
+
+            $.getJSON("{{ url('/user/orders/status/') }}/" + batch)
+                .done(function (res) {
+                    const $badge = $btn.closest('.history-header').find('.status-badge');
+                    $badge.removeClass('badge-primary badge-warning badge-success badge-secondary')
+                        .addClass(statusClassFor(res.status)).text(res.status.toUpperCase());
+                })
+                .fail(function () {
+                    alert('Gagal mengambil status.');
+                })
+                .always(function () {
+                    $btn.prop('disabled', false).text('Refresh');
+                });
+        });
+
+        setInterval(function () {
+            $('.refresh-status').each(function () {
+                $(this).trigger('click');
+            });
+        }, 30000);
+    });
+</script>
+@endsection
 
 @endsection

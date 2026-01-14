@@ -1,4 +1,4 @@
-@extends('admin.dashboard')
+@extends('admin.layout')
 
 @section('content')
 <h4 class="mb-4">Pesanan Selesai</h4>
